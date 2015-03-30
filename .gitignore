@@ -4,3 +4,15 @@
 /.idea/libraries
 .DS_Store
 /build
+
+# Eclipse project files
+.classpath
+.project
+/project.properties
+/.DS_Store
+/res/.DS_Store
+.idea/.name
+.idea/misc.xml
+.idea/modules.xml
+.idea
+*.iml
