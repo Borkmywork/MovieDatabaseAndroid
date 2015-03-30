@@ -4,6 +4,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -12,7 +15,51 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_screen);
+
+
+        Button findActor = (Button) findViewById(R.id.find_actor);
+        Button findDirector = (Button) findViewById(R.id.find_director);
+        Button findProducer = (Button) findViewById(R.id.find_producer);
+        Button findMovie = (Button) findViewById(R.id.find_movie);
+        Button playGame = (Button) findViewById(R.id.play_game);
+        Button multipleActors = (Button) findViewById(R.id.multiple_actors);
+
+
+        findActor.setOnClickListener(handler);
+        findDirector.setOnClickListener(handler);
+        findProducer.setOnClickListener(handler);
+        findMovie.setOnClickListener(handler);
+        playGame.setOnClickListener(handler);
+        multipleActors.setOnClickListener(handler);
+
     }
+
+    View.OnClickListener handler = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.find_actor:
+                    //do stuff
+                    break;
+                case R.id.find_director:
+                    //do stuff
+                    break;
+                case R.id.find_producer:
+                    //do stuff
+                    break;
+                case R.id.find_movie:
+                    //do stuff
+                    break;
+                case R.id.play_game:
+                    //do stuff
+                    break;
+                case R.id.multiple_actors:
+                    //do stuff
+                    break;
+
+            }
+        }
+    };
 
 
     @Override

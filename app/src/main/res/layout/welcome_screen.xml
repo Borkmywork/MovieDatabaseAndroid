@@ -3,11 +3,67 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
+        <TextView
+            android:id="@+id/welcome_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome to Kevin Bacon."
+            android:layout_gravity="center_horizontal"
+            android:textSize="30dp"
+            android:padding="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What you like to do?"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="20dp">
+
+        <Button
+            android:id="@+id/find_actor"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="Find actor"/>
+
+        <Button
+            android:id="@+id/find_director"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="Find director"/>
+        <Button
+            android:id="@+id/find_producer"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="Find producer"/>
+        <Button
+            android:id="@+id/find_movie"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="Find movie"/>
+        <Button
+            android:id="@+id/play_game"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="Play Game"/>
+        <Button
+            android:id="@+id/multiple_actors"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="Multiple Actors"/>
+
+    </LinearLayout>
+
 </LinearLayout>
