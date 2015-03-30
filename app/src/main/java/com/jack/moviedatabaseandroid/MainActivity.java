@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -39,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.find_actor:
-                    //do stuff
+                    //
                     break;
                 case R.id.find_director:
                     //do stuff
