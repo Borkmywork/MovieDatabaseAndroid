@@ -19,7 +19,8 @@
         </activity>
         <activity
             android:name=".SearchProducerActivity"
-            android:label="@string/title_activity_search_producer" >
+            android:label="@string/title_activity_search_producer"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
     </application>
 
