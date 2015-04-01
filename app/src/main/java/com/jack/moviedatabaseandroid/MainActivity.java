@@ -1,6 +1,7 @@
 package com.jack.moviedatabaseandroid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -45,9 +46,11 @@ public class MainActivity extends Activity {
                     break;
                 case R.id.find_director:
                     //do stuff
+                    startActivity(new Intent(MainActivity.this, FindDirectorActivity.class));   //Load FindDirectorActivity
                     break;
                 case R.id.find_producer:
                     //do stuff
+                    startActivity(new Intent(MainActivity.this, SearchProducerActivity.class)); //Load SearchProducerActivity
                     break;
                 case R.id.find_movie:
                     //do stuff

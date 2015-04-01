@@ -1,7 +1,6 @@
 package com.jack.moviedatabaseandroid;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
