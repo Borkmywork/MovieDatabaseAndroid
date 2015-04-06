@@ -23,7 +23,8 @@
         android:layout_height="59dp"
         android:text="Go!"
         android:id="@+id/btnDirectorSearch"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:enabled="false" />
 
     <ListView
         android:layout_width="match_parent"
