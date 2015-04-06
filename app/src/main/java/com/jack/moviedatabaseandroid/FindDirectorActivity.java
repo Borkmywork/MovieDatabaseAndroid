@@ -23,85 +23,85 @@ public class FindDirectorActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_director);
-    }
-
-    //Results List
-    final ListView listDirectorResults = (ListView) findViewById(R.id.listDirectorResults);
-
-    //Example list of movies
-    String[] movies = new String[]{
-            "Movie 1",
-            "Movie 2",
-            "Movie 3",
-            "Movie 4",
-            "Movie 5",
-            "Movie 6",
-            "Movie 7",
-            "Movie 8",
-            "Movie 9",
-            "Movie 10"
-    };
-
-    // Define a new Adapter
-    // First parameter - Context
-    // Second parameter - Layout for the row
-    // Third parameter - ID of the TextView to which the data is written
-    // Forth - the Array of data
-    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-            android.R.id.text1, movies);
-
-    //Assign adapter to ListView
-    listDirectorResults.setAdapter(adapter);
 
 
-    //ListView item click listener
-    listDirectorResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //Get item value
-            String itemValue = (String) listDirectorResults.getItemAtPosition(position);
+        //Results List
+        final ListView listDirectorResults = (ListView) findViewById(R.id.listDirectorResults);
 
-            //Toast
-            Toast.makeText(getApplicationContext(), itemValue, Toast.LENGTH_SHORT).show();
-        }
-    });
+        //Example list of movies
+        String[] movies = new String[]{
+                "Movie 1",
+                "Movie 2",
+                "Movie 3",
+                "Movie 4",
+                "Movie 5",
+                "Movie 6",
+                "Movie 7",
+                "Movie 8",
+                "Movie 9",
+                "Movie 10"
+        };
 
-    //Search button
-    final Button btnDirectorSearch = (Button) findViewById(R.id.btnDirectorSearch);
+        // Define a new Adapter
+        // First parameter - Context
+        // Second parameter - Layout for the row
+        // Third parameter - ID of the TextView to which the data is written
+        // Forth - the Array of data
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                android.R.id.text1, movies);
 
-    btnDirectorSearch.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //When the search button is pressed
-            listDirectorResults.setVisibility(View.VISIBLE);    //Show ListView
-        }
-    });
+        //Assign adapter to ListView
+        listDirectorResults.setAdapter(adapter);
 
-    //Text Changed Listener
-    final EditText editTxtDirectorName = (EditText) findViewById(R.id.editTxtDirectorName);
-    editTxtDirectorName.addTextChangedListener(new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }
+        //ListView item click listener
+        listDirectorResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Get item value
+                String itemValue = (String) listDirectorResults.getItemAtPosition(position);
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!editTxtDirectorName.getText().toString().isEmpty())
-                btnDirectorSearch.setEnabled(true);     //Enable button if EditText isn't empty
-            else {
-                btnDirectorSearch.setEnabled(false);    //Disable button if EditText is empty
-                listDirectorResults.setVisibility(View.INVISIBLE);      //Hide ListView
+                //Toast
+                Toast.makeText(getApplicationContext(), itemValue, Toast.LENGTH_SHORT).show();
             }
-        }
+        });
 
-        @Override
-        public void afterTextChanged(Editable s) {
+        //Search button
+        final Button btnDirectorSearch = (Button) findViewById(R.id.btnDirectorSearch);
 
-        }
-    });
+        btnDirectorSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //When the search button is pressed
+                listDirectorResults.setVisibility(View.VISIBLE);    //Show ListView
+            }
+        });
 
+        //Text Changed Listener
+        final EditText editTxtDirectorName = (EditText) findViewById(R.id.editTxtDirectorName);
+        editTxtDirectorName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!editTxtDirectorName.getText().toString().isEmpty())
+                    btnDirectorSearch.setEnabled(true);     //Enable button if EditText isn't empty
+                else {
+                    btnDirectorSearch.setEnabled(false);    //Disable button if EditText is empty
+                    listDirectorResults.setVisibility(View.INVISIBLE);      //Hide ListView
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
