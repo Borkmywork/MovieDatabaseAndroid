@@ -1,5 +1,7 @@
 package com.jack.moviedatabaseandroid;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +42,15 @@ public class MainActivity extends ActionBarActivity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.find_actor:
-                    //
+
                     break;
                 case R.id.find_director:
                     //do stuff
+                    startActivity(new Intent(MainActivity.this, FindDirectorActivity.class));   //Load FindDirectorActivity
                     break;
                 case R.id.find_producer:
                     //do stuff
+                    startActivity(new Intent(MainActivity.this, SearchProducerActivity.class)); //Load SearchProducerActivity
                     break;
                 case R.id.find_movie:
                     //do stuff
