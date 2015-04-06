@@ -14,14 +14,22 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/editTxtDirectorName"
         android:layout_weight="0.05" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go!"
-        android:id="@+id/button"
+        android:id="@+id/btnDirectorSearch"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.09" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listDirectorResults"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible" />
+
 </LinearLayout>
