@@ -46,11 +46,11 @@ public class MainActivity extends Activity {
                     break;
                 case R.id.find_director:
                     //do stuff
-                    startActivity(new Intent(MainActivity.this, FindDirectorActivity.class));   //Load FindDirectorActivity
+                    startActivity(new Intent(v.getContext(), FindDirectorActivity.class));   //Load FindDirectorActivity
                     break;
                 case R.id.find_producer:
                     //do stuff
-                    startActivity(new Intent(MainActivity.this, SearchProducerActivity.class)); //Load SearchProducerActivity
+                    startActivity(new Intent(v.getContext(), SearchProducerActivity.class)); //Load SearchProducerActivity
                     break;
                 case R.id.find_movie:
                     //do stuff
