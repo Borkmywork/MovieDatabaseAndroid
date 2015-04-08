@@ -15,6 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Find actors"
-        android:id="@+id/button2"
-        android:layout_weight="1.09" />
+        android:id="@+id/btnActorSearch"
+        android:layout_weight="0.07" />
+
+    <EditText
+        android:id="@+id/editTxtActorName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listActorResults"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible" />
 </LinearLayout>
