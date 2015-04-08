@@ -15,18 +15,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 /**
- * Created by Jack on 3/30/15.
+ * Created by cruze on 4/6/15.
  */
-public class FindDirectorActivity extends Activity{
+public class MovieGame extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.find_director);
-
+        setContentView(R.layout.play_game);
 
         //Results List
-        final ListView listDirectorResults = (ListView) findViewById(R.id.listDirectorResults);
+        final ListView listGameResults = (ListView) findViewById(R.id.listGameResults);
 
         //Example list of movies
         String[] movies = new String[]{
@@ -51,15 +50,14 @@ public class FindDirectorActivity extends Activity{
                 android.R.id.text1, movies);
 
         //Assign adapter to ListView
-        listDirectorResults.setAdapter(adapter);
-
+        listGameResults.setAdapter(adapter);
 
         //ListView item click listener
-        listDirectorResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listGameResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Get item value
-                String itemValue = (String) listDirectorResults.getItemAtPosition(position);
+                String itemValue = (String) listGameResults.getItemAtPosition(position);
 
                 //Toast
                 Toast.makeText(getApplicationContext(), itemValue, Toast.LENGTH_SHORT).show();
@@ -67,19 +65,20 @@ public class FindDirectorActivity extends Activity{
         });
 
         //Search button
-        final Button btnDirectorSearch = (Button) findViewById(R.id.btnDirectorSearch);
+        final Button btnMovieGame = (Button) findViewById(R.id.btnMovieGame);
 
-        btnDirectorSearch.setOnClickListener(new View.OnClickListener() {
+        btnMovieGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //When the search button is pressed
-                listDirectorResults.setVisibility(View.VISIBLE);    //Show ListView
+                listGameResults.setVisibility(View.VISIBLE);    //Show ListView
             }
         });
 
         //Text Changed Listener
-        final EditText editTxtDirectorName = (EditText) findViewById(R.id.editTxtDirectorName);
-        editTxtDirectorName.addTextChangedListener(new TextWatcher() {
+        final EditText editTextActor1 = (EditText) findViewById(R.id.editTextActor1);
+        //final EditText editTextActor2 = (EditText) findViewById(R.id.editTextActor2);
+        editTextActor1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -87,11 +86,11 @@ public class FindDirectorActivity extends Activity{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!editTxtDirectorName.getText().toString().isEmpty())
-                    btnDirectorSearch.setEnabled(true);     //Enable button if EditText isn't empty
+                if (!editTextActor1.getText().toString().isEmpty())
+                    btnMovieGame.setEnabled(true);     //Enable button if EditText isn't empty
                 else {
-                    btnDirectorSearch.setEnabled(false);    //Disable button if EditText is empty
-                    listDirectorResults.setVisibility(View.INVISIBLE);      //Hide ListView
+                    btnMovieGame.setEnabled(false);    //Disable button if EditText is empty
+                    listGameResults.setVisibility(View.INVISIBLE);      //Hide ListView
                 }
             }
 
@@ -100,13 +99,13 @@ public class FindDirectorActivity extends Activity{
 
             }
         });
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_find_director, menu);
+        getMenuInflater().inflate(R.menu.menu_play_game, menu);
         return true;
     }
 
@@ -124,5 +123,4 @@ public class FindDirectorActivity extends Activity{
 
         return super.onOptionsItemSelected(item);
     }
-
 }

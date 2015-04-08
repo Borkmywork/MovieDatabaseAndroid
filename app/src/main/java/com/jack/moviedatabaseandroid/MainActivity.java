@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
                     //do stuff
                     break;
                 case R.id.play_game:
+                    startActivity(new Intent(v.getContext(), MovieGame.class));
                     //do stuff
                     break;
                 case R.id.multiple_actors:
