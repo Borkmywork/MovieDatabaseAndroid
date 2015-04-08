@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.find_actor:
-
+                    startActivity(new Intent(v.getContext(), FindActorActivity.class));
                     break;
                 case R.id.find_director:
                     //do stuff
