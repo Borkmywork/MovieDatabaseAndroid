@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_search_actor">Search By Actor</string>
     <string name="title_activity_search_producer">Search By Producer</string>
     <string name="title_activity_find_director">Search For Director</string>
     <string name="title_activity_play_game">Search For Game</string>
