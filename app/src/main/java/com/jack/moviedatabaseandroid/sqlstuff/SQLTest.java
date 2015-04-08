@@ -20,6 +20,15 @@ public class SQLTest extends AsyncTask<String, Void, String> {
 
     private Context context;
 
+    public SQLTest(Context context){
+        this.context = context;
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
     @Override
     protected String doInBackground(String... arg0) {
         try{
@@ -49,4 +58,5 @@ public class SQLTest extends AsyncTask<String, Void, String> {
 
 
     }
+
 }
