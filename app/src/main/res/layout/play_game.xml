@@ -14,19 +14,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Actor 1"
         android:ems="10"
         android:id="@+id/editTextActor1"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:hint="Actor 1" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Actor 2"
         android:ems="10"
         android:id="@+id/editTextActor2"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:hint="Actor 2" />
 
     <Button
         android:layout_width="wrap_content"
