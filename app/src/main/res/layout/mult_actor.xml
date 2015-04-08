@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="false"
+    android:id="@+id/mult_actor">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Search Multiple Actors"
+        android:id="@+id/title"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Actor name"
+        android:ems="10"
+        android:id="@+id/actor1" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/actor2"
+        android:text="Actor name" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:id="@+id/search_button"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true" />
+
+    <ListView
+        android:layout_width="354dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/movieList"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"
+        android:headerDividersEnabled="false" />
+
+</LinearLayout>
