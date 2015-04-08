@@ -61,6 +61,7 @@ public class MainActivity extends Activity {
                     break;
                 case R.id.multiple_actors:
                     //do stuff
+                    startActivity(new Intent(v.getContext(), MultipleActors.class));
                     break;
 
             }

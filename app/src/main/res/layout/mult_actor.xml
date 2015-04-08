@@ -17,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Actor name"
         android:ems="10"
-        android:id="@+id/actor1" />
+        android:id="@+id/actor1"
+        android:hint="Actor name" />
 
     <EditText
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/actor2"
-        android:text="Actor name" />
+        android:hint="Actor name" />
 
     <Button
         android:layout_width="wrap_content"

@@ -73,9 +73,8 @@ public class MultipleActors extends Activity {
             }
         });
 
-
         //Text Changed Listener
-        final EditText editActor1 = (EditText) findViewById(R.id.editTextActor1);
+        final EditText editActor1 = (EditText) findViewById(R.id.actor1);
         editActor1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,8 +97,8 @@ public class MultipleActors extends Activity {
 
             }
         });
-        final EditText editActor2 = (EditText) findViewById(R.id.editTextActor2);
-        editActor1.addTextChangedListener(new TextWatcher() {
+        final EditText editActor2 = (EditText) findViewById(R.id.actor2);
+        editActor2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

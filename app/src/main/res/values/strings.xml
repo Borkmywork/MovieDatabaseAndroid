@@ -7,5 +7,6 @@
     <string name="title_activity_search_producer">Search By Producer</string>
     <string name="title_activity_find_director">Search For Director</string>
     <string name="title_activity_play_game">Search For Game</string>
+    <string name="title_activity_multiple_actors">Search Multiple Actors</string>
 
 </resources>

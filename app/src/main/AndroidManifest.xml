@@ -36,6 +36,10 @@
             android:name=".MovieGame"
             android:label="@string/title_activity_play_game" >
         </activity>
+        <activity
+            android:name=".MultipleActors"
+            android:label="@string/title_activity_multiple_actors" >
+        </activity>
     </application>
 
 </manifest>
