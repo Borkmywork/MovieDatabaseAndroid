@@ -25,6 +25,10 @@
             android:name=".FindDirectorActivity"
             android:label="@string/title_activity_find_director" >
         </activity>
+        <activity
+            android:name=".MovieGame"
+            android:label="@string/title_activity_play_game" >
+        </activity>
     </application>
 
 </manifest>
