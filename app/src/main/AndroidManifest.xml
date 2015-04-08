@@ -18,6 +18,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".FindActorActivity"
+            android:label="@string/title_activity_search_actor">
+        </activity>
+        <activity
             android:name=".SearchProducerActivity"
             android:label="@string/title_activity_search_producer">
         </activity>

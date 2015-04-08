@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 
 /**
- * Created by Jack on 3/30/15.
+ * Created by Dan on 3/30/15.
  */
 public class FindActorActivity extends Activity{
 
@@ -68,9 +68,9 @@ public class FindActorActivity extends Activity{
         });
 
         //Search button
-        final Button btnActorSearch = (Button) findViewById(R.id.btnActorSearch);
+        final Button btnfindactor = (Button) findViewById(R.id.btnfindactor);
 
-        btnActorSearch.setOnClickListener(new View.OnClickListener() {
+        btnfindactor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //When the search button is pressed
@@ -89,9 +89,9 @@ public class FindActorActivity extends Activity{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!editTxtActorName.getText().toString().isEmpty())
-                    btnActorSearch.setEnabled(true);     //Enable button if EditText isn't empty
+                    btnfindactor.setEnabled(true);     //Enable button if EditText isn't empty
                 else {
-                    btnActorSearch.setEnabled(false);    //Disable button if EditText is empty
+                    btnfindactor.setEnabled(false);    //Disable button if EditText is empty
                     listActorResults.setVisibility(View.INVISIBLE);      //Hide ListView
                 }
             }
