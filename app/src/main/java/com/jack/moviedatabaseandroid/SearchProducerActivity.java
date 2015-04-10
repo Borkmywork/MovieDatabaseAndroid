@@ -9,22 +9,41 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class SearchProducerActivity extends Activity {
+
+    ListView listProducerResults;
+    Button btnProducerSearch;
+    AutoCompleteTextView editTxtProducerName;
+    ArrayList<String> producers = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_producer);
 
-        //Results List
-        final ListView listProducerResults = (ListView) findViewById(R.id.listProducerResults);
+        //Add producer names for the auto-complete search
+        producers.add("Nolan");
+        producers.add("Jack");
+        producers.add("Bennett");
+        producers.add("Dan");
+        producers.add("Cruze");
+        producers.add("Bence");
 
+        //Results List
+        listProducerResults = (ListView) findViewById(R.id.listProducerResults);
+        //Search button
+        btnProducerSearch = (Button) findViewById(R.id.btnProducerSearch);
+        //Producer search field
+        editTxtProducerName = (AutoCompleteTextView) findViewById(R.id.editTxtProducerName);
         //Example list of movies
         String[] movies = new String[]{
                 "Movie 1",
@@ -38,14 +57,10 @@ public class SearchProducerActivity extends Activity {
                 "Movie 9",
                 "Movie 10"
         };
-
         // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                 android.R.id.text1, movies);
+
 
         //Assign adapter to ListView
         listProducerResults.setAdapter(adapter);
@@ -58,12 +73,9 @@ public class SearchProducerActivity extends Activity {
                 String itemValue = (String) listProducerResults.getItemAtPosition(position);
 
                 //Toast
-                Toast.makeText(getApplicationContext(), itemValue, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), itemValue + " by " + editTxtProducerName.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        //Search button
-        final Button btnProducerSearch = (Button) findViewById(R.id.btnProducerSearch);
 
         btnProducerSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +86,6 @@ public class SearchProducerActivity extends Activity {
         });
 
         //Text Changed Listener
-        final EditText editTxtProducerName = (EditText) findViewById(R.id.editTxtProducerName);
         editTxtProducerName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -83,11 +94,15 @@ public class SearchProducerActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //If name in producers array is already typed, close the dropdown
+                if (producers.contains(editTxtProducerName.getText().toString()))
+                    editTxtProducerName.dismissDropDown();
+
+                listProducerResults.setVisibility(View.INVISIBLE);      //Hide ListView
                 if (!editTxtProducerName.getText().toString().isEmpty())
                     btnProducerSearch.setEnabled(true);     //Enable button if EditText isn't empty
                 else {
                     btnProducerSearch.setEnabled(false);    //Disable button if EditText is empty
-                    listProducerResults.setVisibility(View.INVISIBLE);      //Hide ListView
                 }
             }
 
@@ -96,6 +111,16 @@ public class SearchProducerActivity extends Activity {
 
             }
         });
+
+        /**
+         * DROP DOWN AUTO-COMPLETE SEARCH
+         */
+        //Adapter to use the producers array with the search list
+        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_dropdown_item_1line, producers);
+        //Set the adapter to the search list
+        editTxtProducerName.setAdapter(autoCompleteAdapter);
+
     }
 
 
