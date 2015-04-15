@@ -1,6 +1,7 @@
 package com.jack.moviedatabaseandroid;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,116 +13,166 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 
 public class MultipleActors extends Activity {
+
+    String url = "jdbc:mysql://98.130.0.90:3306/pggarla_movies";
+    String user = "pggarla_preader";
+    String pass = "Csc4610mysql";
+    Connection conn;
+    ArrayList<String> movies = new ArrayList<>();
+    ListView movieList;
+    EditText editActor1;
+    EditText editActor2;
+    EditText editActor3;
+    EditText editActor4;
+    EditText editActor5;
+    Button search_button;
+    String fullName;
+    String firstName;
+    String lastName;
+    String lastCommaFirst;
+    EditText[] texts;
+    ArrayList<EditText> visibleTexts;
+    ArrayAdapter<String> mAdapter;
+    int count;
+
+
+    ArrayList<String> arrayOriginal;
+    ArrayList<String> arrayDuplicates;
+    int howMany;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mult_actor);
 
-        //Results List
-        final ListView movieList = (ListView) findViewById(R.id.movieList);
+        texts = new EditText[5];
+        visibleTexts = new ArrayList<>();
 
-        //Example list of movies
-        String[] movies = new String[]{
-                "Movie 1",
-                "Movie 2",
-                "Movie 3",
-                "Movie 4",
-                "Movie 5",
-                "Movie 6",
-                "Movie 7",
-                "Movie 8",
-                "Movie 9",
-                "Movie 10"
-        };
+        editActor1 = (EditText) findViewById(R.id.actor1);
+        texts[0] = editActor1;
+
+        editActor2 = (EditText) findViewById(R.id.actor2);
+        texts[1] = editActor2;
+
+        editActor3 = (EditText) findViewById(R.id.actor3);
+        texts[2] = editActor3;
+
+        editActor4 = (EditText) findViewById(R.id.actor4);
+        texts[3] = editActor4;
+
+        editActor5 = (EditText) findViewById(R.id.actor5);
+        texts[4] = editActor5;
+
+        for(EditText each: texts){
+            each.setVisibility(View.GONE);
+        }
+
+        Spinner dropdown = (Spinner)findViewById(R.id.spinner1);
+        String[] items = new String[]{"1", "2", "3", "4", "5"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
+        dropdown.setAdapter(adapter);
+
+        dropdown.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                howMany = position + 1;
+                makeEditsVisible();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        //Results List
+        movieList = (ListView) findViewById(R.id.movieList);
+
+        arrayOriginal = new ArrayList<>();
+        arrayDuplicates = new ArrayList<>();
+
 
         // Define a new Adapter
         // First parameter - Context
         // Second parameter - Layout for the row
         // Third parameter - ID of the TextView to which the data is written
         // Forth - the Array of data
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-                android.R.id.text1, movies);
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                android.R.id.text1, arrayOriginal);
 
         //Assign adapter to ListView
-        movieList.setAdapter(adapter);
+        movieList.setAdapter(mAdapter);
 
-        //ListView item click listener
-        movieList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Get item value
-                String itemValue = (String) movieList.getItemAtPosition(position);
 
-                //Toast
-                Toast.makeText(getApplicationContext(), itemValue, Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
         //Search button
-        final Button search_button = (Button) findViewById(R.id.search_button);
+        search_button = (Button) findViewById(R.id.search_button);
 
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //When the search button is pressed
-                movieList.setVisibility(View.VISIBLE);    //Show ListView
-            }
-        });
-
-        //Text Changed Listener
-        final EditText editActor1 = (EditText) findViewById(R.id.actor1);
-        editActor1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!editActor1.getText().toString().isEmpty())
-                    search_button.setEnabled(true);     //Enable button if EditText isn't empty
-                else {
-                    search_button.setEnabled(false);    //Disable button if EditText is empty
-                    movieList.setVisibility(View.INVISIBLE);      //Hide ListView
+                movies.clear();
+                mAdapter.notifyDataSetChanged();
+                count = 0;
+                for(EditText each: visibleTexts) {
+                    fullName = each.getText().toString();
+                    String[] splited = fullName.split(" ");
+                    firstName = splited[0];
+                    lastName = splited[splited.length - 1];
+                    lastCommaFirst = "'" + lastName + ", " + firstName + "'";
+                    excecuteQuery();
+                    count++;
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+                count = 0;
+                movieList.setVisibility(View.VISIBLE);
             }
         });
-        final EditText editActor2 = (EditText) findViewById(R.id.actor2);
-        editActor2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
 
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!editActor2.getText().toString().isEmpty())
-                    search_button.setEnabled(true);     //Enable button if EditText isn't empty
-                else {
-                    search_button.setEnabled(false);    //Disable button if EditText is empty
-                    movieList.setVisibility(View.INVISIBLE);      //Hide ListView
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
+    private void makeEditsVisible() {
+        for(EditText each: texts){
+            each.setVisibility(View.GONE);
+        }
+
+        visibleTexts.clear();
+
+        for(int i = 0; i < howMany; i++){
+            texts[i].setVisibility(View.VISIBLE);
+            visibleTexts.add(texts[i]);
+        }
+    }
+
+    public void excecuteQuery() {
+        new ActorDBConnect().execute("");
+    }
+
+    public void mergeLists(){
+        for(String movie: arrayDuplicates){
+            if(!arrayOriginal.contains(movie)){
+                arrayOriginal.remove(movie);
+            }
+        }
+        arrayDuplicates.clear();
+    }
 
 
 
@@ -139,4 +190,54 @@ public class MultipleActors extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    private class ActorDBConnect extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String entry = "";
+            try {
+
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                conn = DriverManager.getConnection(url, user, pass);
+
+            } catch (java.sql.SQLException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+            try {
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT distinct title.title FROM cast_info\n" +
+                        "INNER JOIN name ON name.id=person_id\n" +
+                        "INNER JOIN title on title.id=cast_info.movie_id\n" +
+                        "WHERE title.kind_id = 1 AND name.name LIKE " + lastCommaFirst + " AND cast_info.role_id = 1\n" +
+                        "ORDER BY title.title");
+                while (rs.next()) {
+                    if(count == 0){
+                        arrayOriginal.add(rs.getString(1));
+                    } else {
+                        arrayDuplicates.add(rs.getString(1));
+                        mergeLists();
+                    }
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+                System.out.println(entry);
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
 }

@@ -34,7 +34,12 @@ public class FindActorActivity extends Activity{
     ArrayList<String> movies = new ArrayList<>();
     ArrayAdapter<String> mAdapter;
     ListView listActorResults;
-    String actor;
+    EditText editTxtActorName;
+    Button btnfindactor;
+    String fullName;
+    String firstName;
+    String lastName;
+    String lastCommaFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +75,23 @@ public class FindActorActivity extends Activity{
 //        });
 
         //Search button
-        Button btnfindactor = (Button) findViewById(R.id.btnfindactor);
-        final EditText editTxtActorName = (EditText) findViewById(R.id.editTxtActorName);
+        btnfindactor = (Button) findViewById(R.id.btnfindactor);
+        editTxtActorName = (EditText) findViewById(R.id.editTxtActorName);
+//        String[] splited = edit.split("\\s+");
 
 
         btnfindactor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                movies.clear();
+                mAdapter.notifyDataSetChanged();
                 //When the search button is pressed
-                actor = editTxtActorName.getText().toString();
+                fullName = editTxtActorName.getText().toString();
+                String[] splited = fullName.split(" ");
+                firstName = splited[0];
+                lastName = splited[splited.length - 1];
+                lastCommaFirst = "'" + lastName + ", " + firstName + "'";
+
                 excecuteQuery();
                 listActorResults.setVisibility(View.VISIBLE);    //Show ListView
             }
@@ -157,7 +170,7 @@ public class FindActorActivity extends Activity{
                 ResultSet rs = stmt.executeQuery("SELECT distinct title.title FROM cast_info\n" +
                         "INNER JOIN name ON name.id=person_id\n" +
                         "INNER JOIN title on title.id=cast_info.movie_id\n" +
-                        "WHERE title.kind_id = 1 AND name.name LIKE 'Wayne, John' AND cast_info.role_id = 1\n" +
+                        "WHERE title.kind_id = 1 AND name.name LIKE " + lastCommaFirst + " AND cast_info.role_id = 1\n" +
                         "ORDER BY title.title");
                 while (rs.next()) {
                    movies.add(rs.getString(1));
@@ -176,6 +189,9 @@ public class FindActorActivity extends Activity{
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mAdapter.notifyDataSetChanged();
+            if(movies.size() == 0){
+                Toast.makeText(getApplicationContext(), "Nothing found...", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
