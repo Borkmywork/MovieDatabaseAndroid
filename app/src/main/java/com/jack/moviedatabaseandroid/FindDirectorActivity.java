@@ -76,6 +76,7 @@ public class FindDirectorActivity extends Activity {
 
         //Search button
         btnDirectorSearch = (Button) findViewById(R.id.btnDirectorSearch);
+        editTxtDirectorName = (EditText) findViewById(R.id.editTxtDirectorName);
 
         btnDirectorSearch.setOnClickListener(new View.OnClickListener() {
             @Override
