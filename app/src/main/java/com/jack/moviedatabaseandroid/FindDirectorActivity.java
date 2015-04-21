@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.sql.Connection;
@@ -39,11 +40,13 @@ public class FindDirectorActivity extends Activity {
     String firstName;
     String lastName;
     String lastCommaFirst;
+    ProgressBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_director);
+        bar = (ProgressBar) findViewById(R.id.directorProgressBar);
 
 
         //Results List
@@ -89,7 +92,7 @@ public class FindDirectorActivity extends Activity {
                 firstName = splited[0];
                 lastName = splited[splited.length - 1];
                 lastCommaFirst = "'" + lastName + ", " + firstName + "'";
-
+                bar.setVisibility(View.VISIBLE);
                 excecuteQuery();
                 //When the search button is pressed
                 listDirectorResults.setVisibility(View.VISIBLE);    //Show ListView
@@ -188,6 +191,10 @@ public class FindDirectorActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mAdapter.notifyDataSetChanged();
+
+
+            bar.setVisibility(View.GONE);
+
             if (movies.size() == 0) {
                 Toast.makeText(getApplicationContext(), "Nothing found...", Toast.LENGTH_SHORT).show();
             }
