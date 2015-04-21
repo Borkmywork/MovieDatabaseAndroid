@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+ <color name = "bacon_dark">#73757F</color>
+ <color name = "bacon_mid">#7E7F7F</color>
+ <color name = "bacon_light">#CACBCC</color>
+ <color name = "bacon_beige">#FDFDFF</color>
+ <color name = "bacon_blue">#D3DAFF</color>
+
+
+</resources>

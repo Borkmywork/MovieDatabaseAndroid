@@ -2,12 +2,14 @@ package com.jack.moviedatabaseandroid;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,11 @@ public class MainActivity extends Activity {
         Button playGame = (Button) findViewById(R.id.play_game);
         Button multipleActors = (Button) findViewById(R.id.multiple_actors);
 
+        ImageView bacon = (ImageView) findViewById(R.id.bacon_gif);
+        bacon.setBackgroundResource(R.drawable.bacon_animation);
+
+        AnimationDrawable frameAnimation = (AnimationDrawable) bacon.getBackground();
+        frameAnimation.start();
 
         findActor.setOnClickListener(handler);
         findDirector.setOnClickListener(handler);

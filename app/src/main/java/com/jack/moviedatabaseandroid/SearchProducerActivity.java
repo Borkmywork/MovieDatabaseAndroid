@@ -23,12 +23,15 @@ public class SearchProducerActivity extends Activity {
     ListView listProducerResults;
     Button btnProducerSearch;
     AutoCompleteTextView editTxtProducerName;
-    ArrayList<String> producers = new ArrayList<String>();
+    ArrayList<String> producers;
+    ArrayAdapter<String> autoCompleteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_producer);
+
+        producers = new ArrayList<>();
 
         //Add producer names for the auto-complete search
         producers.add("Nolan");
@@ -116,7 +119,7 @@ public class SearchProducerActivity extends Activity {
          * DROP DOWN AUTO-COMPLETE SEARCH
          */
         //Adapter to use the producers array with the search list
-        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<String>(
+        autoCompleteAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_dropdown_item_1line, producers);
         //Set the adapter to the search list
         editTxtProducerName.setAdapter(autoCompleteAdapter);
