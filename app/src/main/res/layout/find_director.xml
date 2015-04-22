@@ -8,25 +8,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Enter a Director:"
+        android:text="Enter a Movie:"
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
         android:id="@+id/editTxtDirectorName"
-        android:layout_gravity="center_horizontal"
-        android:hint="Director" />
+        android:layout_weight="0.05" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="59dp"
-        android:text="Search"
+        android:text="Go!"
         android:id="@+id/btnDirectorSearch"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:enabled="false" />
 
     <ListView
         android:layout_width="match_parent"
