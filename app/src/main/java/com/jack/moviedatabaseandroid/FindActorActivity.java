@@ -3,6 +3,7 @@ package com.jack.moviedatabaseandroid;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -10,9 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.sql.Connection;
@@ -20,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Timer;
 
 
 /**
@@ -34,18 +38,35 @@ public class FindActorActivity extends Activity{
     ArrayList<String> movies = new ArrayList<>();
     ArrayAdapter<String> mAdapter;
     ListView listActorResults;
-    EditText editTxtActorName;
+    AutoCompleteTextView editTxtActorName;
     Button btnfindactor;
     String fullName;
     String firstName;
     String lastName;
     String lastCommaFirst;
+    static Timer timer;
+
+
+    ArrayList<String> actors = new ArrayList<>();
+    ArrayAdapter<String> autoCompleteAdapter;
+    ProgressBar bar;
+    String typedText;
+
+    DropdownDBConnect dropAsync;
+    int count;
+
+    long oldTime = 0;
+    long newTime = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_actor);
 
+        bar = (ProgressBar) findViewById(R.id.progressBarActor);
+        actors.add("John");
 
         //Results List
         listActorResults = (ListView) findViewById(R.id.listActorResults);
@@ -76,8 +97,13 @@ public class FindActorActivity extends Activity{
 
         //Search button
         btnfindactor = (Button) findViewById(R.id.btnfindactor);
-        editTxtActorName = (EditText) findViewById(R.id.editTxtActorName);
-//        String[] splited = edit.split("\\s+");
+        editTxtActorName = (AutoCompleteTextView) findViewById(R.id.editTxtActorName);
+
+        //DropDown adapter
+        autoCompleteAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_dropdown_item_1line, actors);
+        //Set the adapter to the search list
+        editTxtActorName.setAdapter(autoCompleteAdapter);
 
 
         btnfindactor.setOnClickListener(new View.OnClickListener() {
@@ -92,38 +118,64 @@ public class FindActorActivity extends Activity{
                 lastName = splited[splited.length - 1];
                 lastCommaFirst = "'" + lastName + ", " + firstName + "'";
 
+                bar.setVisibility(View.VISIBLE);
                 excecuteQuery();
                 listActorResults.setVisibility(View.VISIBLE);    //Show ListView
             }
         });
 
-        //Text Changed Listener
-//        editTxtActorName.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (!editTxtActorName.getText().toString().isEmpty())
-//                    btnfindactor.setEnabled(true);     //Enable button if EditText isn't empty
-//                else {
-//                    btnfindactor.setEnabled(false);    //Disable button if EditText is empty
-//                    listActorResults.setVisibility(View.INVISIBLE);      //Hide ListView
+        count = 0;
+
+        editTxtActorName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                newTime = System.currentTimeMillis() / 1000L;
+                typedText = editTxtActorName.getText().toString();
+                //execute background dropdown
+//                if(oldTime != 0 && (newTime - oldTime) >= 3) {
+                    actors.clear();
+                    excecuteDropdown();
 //                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
+
+//                oldTime = newTime;
+
+
+
+
+                //If name in producers array is already typed, close the dropdown
+                if (actors.contains(editTxtActorName.getText().toString()))
+                   // editTxtActorName.dismissDropDown();
+
+                listActorResults.setVisibility(View.INVISIBLE);      //Hide ListView
+                if (!editTxtActorName.getText().toString().isEmpty())
+                    btnfindactor.setEnabled(true);     //Enable button if EditText isn't empty
+                else {
+                    btnfindactor.setEnabled(false);    //Disable button if EditText is empty
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+
 
     }
 
     public void excecuteQuery() {
         new ActorDBConnect().execute("");
+    }
+
+    public void excecuteDropdown() {
+       new DropdownDBConnect().execute("");
     }
 
     @Override
@@ -173,12 +225,12 @@ public class FindActorActivity extends Activity{
                         "WHERE title.kind_id = 1 AND name.name LIKE " + lastCommaFirst + " AND cast_info.role_id = 1\n" +
                         "ORDER BY title.title");
                 while (rs.next()) {
-                   movies.add(rs.getString(1));
+                    movies.add(rs.getString(1));
+                    System.out.println(rs.getString(1));
                 }
                 rs.close();
                 stmt.close();
                 conn.close();
-                System.out.println(entry);
             } catch (java.sql.SQLException e) {
                 e.printStackTrace();
             }
@@ -192,9 +244,71 @@ public class FindActorActivity extends Activity{
             if(movies.size() == 0){
                 Toast.makeText(getApplicationContext(), "Nothing found...", Toast.LENGTH_SHORT).show();
             }
+            bar.setVisibility(View.GONE);
         }
     }
 
+    private class DropdownDBConnect extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String entry = "";
+            try {
+
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                conn = DriverManager.getConnection(url, user, pass);
+
+            } catch (java.sql.SQLException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+            try {
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT name.name FROM cast_info INNER JOIN name ON cast_info.person_id = name.id WHERE name.name LIKE '%" + typedText + "' AND cast_info.role_id = 1 ORDER BY name.name LIMIT 5");
+                while (rs.next()) {
+                    String name = rs.getString(1);
+                    String[] both = name.split(",");
+                    String fl;
+                    try {
+                        fl = both[1] + " " + both[0];
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        fl = both[0];
+                    }
+                    if(!actors.contains(fl))
+                        actors.add(fl);
+                    System.out.println(fl);
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            updateDropdown();
+        }
+    }
+
+    private void updateDropdown() {
+        autoCompleteAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_dropdown_item_1line, actors);
+        //Set the adapter to the search list
+        editTxtActorName.setAdapter(autoCompleteAdapter);
+
+        if(actors.size() < 40)
+            editTxtActorName.setThreshold(1);
+        else
+            editTxtActorName.setThreshold(2);
+
+        editTxtActorName.showDropDown();
+    }
 
 
 

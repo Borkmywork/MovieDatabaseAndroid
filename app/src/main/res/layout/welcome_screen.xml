@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bacon_beige">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +16,15 @@
             android:text="Welcome to Kevin Bacon."
             android:layout_gravity="center_horizontal"
             android:textSize="30dp"
-            android:padding="20dp"/>
+            android:padding="20dp"
+            android:textColor="@color/bacon_dark"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="What you like to do?"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/bacon_dark"/>
 
     </LinearLayout>
 
@@ -34,35 +37,52 @@
 
         <Button
             android:id="@+id/find_actor"
+            android:layout_margin="5dp"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:text="Find actor"/>
+            android:text="Find actor"
+            android:background="@color/bacon_blue"/>
 
         <Button
             android:id="@+id/find_director"
+            android:layout_margin="5dp"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:text="Find director"/>
+            android:text="Find director"
+            android:background="@color/bacon_blue"/>
         <Button
             android:id="@+id/find_producer"
+            android:layout_margin="5dp"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:text="Find producer"/>
+            android:text="Find producer"
+            android:background="@color/bacon_blue"/>
         <Button
             android:id="@+id/find_movie"
+            android:layout_margin="5dp"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:text="Find movie"/>
+            android:text="Find movie"
+            android:background="@color/bacon_blue"/>
         <Button
             android:id="@+id/play_game"
+            android:layout_margin="5dp"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:text="Play Game"/>
+            android:text="Play Game"
+            android:background="@color/bacon_blue"/>
         <Button
             android:id="@+id/multiple_actors"
+            android:layout_margin="5dp"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:text="Multiple Actors"/>
+            android:text="Multiple Actors"
+            android:background="@color/bacon_blue"/>
+
+        <ImageView
+            android:id="@+id/bacon_gif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
