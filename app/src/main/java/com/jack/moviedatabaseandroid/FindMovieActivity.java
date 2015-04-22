@@ -32,6 +32,7 @@ public class FindMovieActivity extends Activity{
     String url = "jdbc:mysql://98.130.0.90:3306/pggarla_movies";
     String user = "pggarla_preader";
     String pass = "Csc4610mysql";
+
     Connection conn;
     ArrayList<String> movies = new ArrayList<>();
     ArrayAdapter<String> mAdapter;

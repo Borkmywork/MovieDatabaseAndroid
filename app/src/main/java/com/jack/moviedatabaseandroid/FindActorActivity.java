@@ -31,9 +31,12 @@ import java.util.Timer;
  */
 public class FindActorActivity extends Activity{
 
-    String url = "jdbc:mysql://98.130.0.90:3306/pggarla_movies";
-    String user = "pggarla_preader";
-    String pass = "Csc4610mysql";
+//    String url = "jdbc:mysql://98.130.0.90:3306/pggarla_movies";
+//    String user = "pggarla_preader";
+//    String pass = "Csc4610mysql";
+    String url = "jdbc:mysql://172.16.64.249:3306/movies";
+    String user = "garlandpreader";
+    String pass = "csc4610mysql";
     Connection conn;
     ArrayList<String> movies = new ArrayList<>();
     ArrayAdapter<String> mAdapter;
@@ -138,8 +141,8 @@ public class FindActorActivity extends Activity{
                 typedText = editTxtActorName.getText().toString();
                 //execute background dropdown
 //                if(oldTime != 0 && (newTime - oldTime) >= 3) {
-                    actors.clear();
-                    excecuteDropdown();
+//                    actors.clear();
+//                    excecuteDropdown();
 //                }
 
 //                oldTime = newTime;
