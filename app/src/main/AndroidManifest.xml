@@ -21,6 +21,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".FindMovieActivity"
+            android:label="@string/title_activity_search_movie">
+        </activity>
+        <activity
             android:name=".FindActorActivity"
             android:label="@string/title_activity_search_actor">
         </activity>
