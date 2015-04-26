@@ -1,94 +1,111 @@
 package com.jack.moviedatabaseandroid;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Timer;
 
 
-public class SearchProducerActivity extends Activity {
+public class SearchProducerActivity extends Activity{
 
+    String url = "jdbc:mysql://98.130.0.90:3306/pggarla_movies";
+    String user = "pggarla_preader";
+    String pass = "Csc4610mysql";
+    Connection conn;
+    ArrayList<String> movies = new ArrayList<>();
+    ArrayAdapter<String> mAdapter;
     ListView listProducerResults;
-    Button btnProducerSearch;
     AutoCompleteTextView editTxtProducerName;
-    ArrayList<String> producers;
+    Button btnfindproducer;
+    String fullName;
+    String firstName;
+    String lastName;
+    String lastCommaFirst;
+    static Timer timer;
+
+
+    ArrayList<String> actors = new ArrayList<>();
     ArrayAdapter<String> autoCompleteAdapter;
+    ProgressBar bar;
+    String typedText;
+
+    int count;
+
+    long oldTime = 0;
+    long newTime = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_producer);
 
-        producers = new ArrayList<>();
+        bar = (ProgressBar) findViewById(R.id.progressBarProducer);
+        //Search button
+        btnfindproducer = (Button) findViewById(R.id.btnfindproducer);
+        editTxtProducerName = (AutoCompleteTextView) findViewById(R.id.editTxtProducerName);
 
-        //Add producer names for the auto-complete search
-        producers.add("Nolan");
-        producers.add("Jack");
-        producers.add("Bennett");
-        producers.add("Dan");
-        producers.add("Cruze");
-        producers.add("Bence");
+
 
         //Results List
         listProducerResults = (ListView) findViewById(R.id.listProducerResults);
-        //Search button
-        btnProducerSearch = (Button) findViewById(R.id.btnProducerSearch);
-        //Producer search field
-        editTxtProducerName = (AutoCompleteTextView) findViewById(R.id.editTxtProducerName);
-        //Example list of movies
-        String[] movies = new String[]{
-                "Movie 1",
-                "Movie 2",
-                "Movie 3",
-                "Movie 4",
-                "Movie 5",
-                "Movie 6",
-                "Movie 7",
-                "Movie 8",
-                "Movie 9",
-                "Movie 10"
-        };
+
         // Define a new Adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+        // First parameter - Context
+        // Second parameter - Layout for the row
+        // Third parameter - ID of the TextView to which the data is written
+        // Forth - the Array of data
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                 android.R.id.text1, movies);
 
-
         //Assign adapter to ListView
-        listProducerResults.setAdapter(adapter);
+        listProducerResults.setAdapter(mAdapter);
 
-        //ListView item click listener
-        listProducerResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Get item value
-                String itemValue = (String) listProducerResults.getItemAtPosition(position);
 
-                //Toast
-                Toast.makeText(getApplicationContext(), itemValue + " by " + editTxtProducerName.getText().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        //DropDown adapter
+        autoCompleteAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_dropdown_item_1line, actors);
+        //Set the adapter to the search list
+        editTxtProducerName.setAdapter(autoCompleteAdapter);
 
-        btnProducerSearch.setOnClickListener(new View.OnClickListener() {
+
+        btnfindproducer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                movies.clear();
+                mAdapter.notifyDataSetChanged();
                 //When the search button is pressed
+                fullName = editTxtProducerName.getText().toString();
+                String[] splited = fullName.split(" ");
+                firstName = splited[0];
+                lastName = splited[splited.length - 1];
+                lastCommaFirst = "'" + lastName + ", " + firstName + "'";
+
+                bar.setVisibility(View.VISIBLE);
+                excecuteQuery();
                 listProducerResults.setVisibility(View.VISIBLE);    //Show ListView
             }
         });
 
-        //Text Changed Listener
+        count = 0;
+
         editTxtProducerName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -97,15 +114,18 @@ public class SearchProducerActivity extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //If name in producers array is already typed, close the dropdown
-                if (producers.contains(editTxtProducerName.getText().toString()))
-                    editTxtProducerName.dismissDropDown();
+                typedText = editTxtProducerName.getText().toString();
 
-                listProducerResults.setVisibility(View.INVISIBLE);      //Hide ListView
+
+                //If name in producers array is already typed, close the dropdown
+                if (actors.contains(editTxtProducerName.getText().toString()))
+                    // editTxtProducerName.dismissDropDown();
+
+                    listProducerResults.setVisibility(View.INVISIBLE);      //Hide ListView
                 if (!editTxtProducerName.getText().toString().isEmpty())
-                    btnProducerSearch.setEnabled(true);     //Enable button if EditText isn't empty
+                    btnfindproducer.setEnabled(true);     //Enable button if EditText isn't empty
                 else {
-                    btnProducerSearch.setEnabled(false);    //Disable button if EditText is empty
+                    btnfindproducer.setEnabled(false);    //Disable button if EditText is empty
                 }
             }
 
@@ -115,15 +135,11 @@ public class SearchProducerActivity extends Activity {
             }
         });
 
-        /**
-         * DROP DOWN AUTO-COMPLETE SEARCH
-         */
-        //Adapter to use the producers array with the search list
-        autoCompleteAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_dropdown_item_1line, producers);
-        //Set the adapter to the search list
-        editTxtProducerName.setAdapter(autoCompleteAdapter);
 
+    }
+
+    public void excecuteQuery() {
+        new ProducerDBConnect().execute("");
     }
 
 
@@ -134,18 +150,54 @@ public class SearchProducerActivity extends Activity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+    private class ProducerDBConnect extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String entry = "";
+            try {
+
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                conn = DriverManager.getConnection(url, user, pass);
+
+            } catch (java.sql.SQLException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+            try {
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT distinct title.title FROM cast_info\n" +
+                        "INNER JOIN name ON name.id=person_id\n" +
+                        "INNER JOIN title on title.id=cast_info.movie_id\n" +
+                        "WHERE title.kind_id = 1 AND name.name LIKE " + lastCommaFirst + " AND cast_info.role_id = 3\n" +
+                        "ORDER BY title.title");
+                while (rs.next()) {
+                    movies.add(rs.getString(1));
+                    System.out.println(rs.getString(1));
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mAdapter.notifyDataSetChanged();
+            if(movies.size() == 0){
+                Toast.makeText(getApplicationContext(), "Nothing found...", Toast.LENGTH_SHORT).show();
+            }
+            bar.setVisibility(View.GONE);
+        }
     }
+
+
 }
