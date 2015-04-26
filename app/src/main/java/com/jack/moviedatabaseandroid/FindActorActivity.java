@@ -83,18 +83,6 @@ public class FindActorActivity extends Activity{
         listActorResults.setAdapter(mAdapter);
 
 
-        //ListView item click listener
-//        listActorResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                //Get item value
-//                String itemValue = (String) listActorResults.getItemAtPosition(position);
-//
-//                //Toast
-//                Toast.makeText(getApplicationContext(), itemValue, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
         //Search button
         btnfindactor = (Button) findViewById(R.id.btnfindactor);
         editTxtActorName = (AutoCompleteTextView) findViewById(R.id.editTxtActorName);
@@ -138,8 +126,8 @@ public class FindActorActivity extends Activity{
                 typedText = editTxtActorName.getText().toString();
                 //execute background dropdown
 //                if(oldTime != 0 && (newTime - oldTime) >= 3) {
-                    actors.clear();
-                    excecuteDropdown();
+//                    actors.clear();
+//                    excecuteDropdown();
 //                }
 
 //                oldTime = newTime;
