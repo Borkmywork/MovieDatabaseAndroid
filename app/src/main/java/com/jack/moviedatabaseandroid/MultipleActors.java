@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -45,11 +46,14 @@ public class MultipleActors extends Activity {
     EditText[] texts;
     ArrayList<EditText> visibleTexts;
     ArrayAdapter<String> mAdapter;
+    ProgressBar bar;
+
     int count;
 
 
     ArrayList<String> arrayOriginal;
     ArrayList<String> arrayDuplicates;
+    ArrayList<String> arrayTemporary;
     int howMany;
 
 
@@ -99,12 +103,16 @@ public class MultipleActors extends Activity {
             }
         });
 
+        bar = (ProgressBar) findViewById(R.id.progressBarMultActor);
+
+
 
         //Results List
         movieList = (ListView) findViewById(R.id.movieList);
 
         arrayOriginal = new ArrayList<>();
         arrayDuplicates = new ArrayList<>();
+        arrayTemporary = new ArrayList<>();
 
 
         // Define a new Adapter
@@ -128,24 +136,31 @@ public class MultipleActors extends Activity {
             @Override
             public void onClick(View v) {
                 //When the search button is pressed
+                bar.setVisibility(View.VISIBLE);
                 movies.clear();
                 mAdapter.notifyDataSetChanged();
                 count = 0;
-                for(EditText each: visibleTexts) {
-                    fullName = each.getText().toString();
-                    String[] splited = fullName.split(" ");
-                    firstName = splited[0];
-                    lastName = splited[splited.length - 1];
-                    lastCommaFirst = "'" + lastName + ", " + firstName + "'";
-                    excecuteQuery();
-                    count++;
-                }
-                count = 0;
-                movieList.setVisibility(View.VISIBLE);
+                fullName = visibleTexts.get(0).getText().toString();
+                String[] splited = fullName.split(" ");
+                firstName = splited[0];
+                lastName = splited[splited.length - 1];
+                lastCommaFirst = "'" + lastName + ", " + firstName + "'";
+                excecuteQuery();
             }
         });
 
 
+    }
+
+    private void getNextActor(int pos){
+        if(pos < howMany) {
+            fullName = visibleTexts.get(pos).getText().toString();
+            String[] splited = fullName.split(" ");
+            firstName = splited[0];
+            lastName = splited[splited.length - 1];
+            lastCommaFirst = "'" + lastName + ", " + firstName + "'";
+            excecuteQuery();
+        }
     }
 
     private void makeEditsVisible() {
@@ -165,14 +180,7 @@ public class MultipleActors extends Activity {
         new ActorDBConnect().execute("");
     }
 
-    public void mergeLists(){
-        for(String movie: arrayDuplicates){
-            if(!arrayOriginal.contains(movie)){
-                arrayOriginal.remove(movie);
-            }
-        }
-        arrayDuplicates.clear();
-    }
+
 
 
 
@@ -220,8 +228,18 @@ public class MultipleActors extends Activity {
                         arrayOriginal.add(rs.getString(1));
                     } else {
                         arrayDuplicates.add(rs.getString(1));
-                        mergeLists();
                     }
+                }
+                if(count != 0) {
+                    for (String movie : arrayDuplicates) {
+                        if (arrayOriginal.contains(movie)) {
+                            arrayTemporary.add(movie);
+                        }
+                    }
+                    arrayOriginal.clear();
+                    arrayOriginal.addAll(arrayTemporary);
+                    arrayTemporary.clear();
+                    arrayDuplicates.clear();
                 }
                 rs.close();
                 stmt.close();
@@ -236,7 +254,14 @@ public class MultipleActors extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            mAdapter.notifyDataSetChanged();
+            count++;
+            if(count == howMany) {
+                mAdapter.notifyDataSetChanged();
+                bar.setVisibility(View.GONE);
+                movieList.setVisibility(View.VISIBLE);
+            } else {
+                getNextActor(count);
+            }
         }
     }
 

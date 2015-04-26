@@ -66,7 +66,11 @@ public class FindActorActivity extends Activity{
         setContentView(R.layout.find_actor);
 
         bar = (ProgressBar) findViewById(R.id.progressBarActor);
-        actors.add("John");
+        //Search button
+        btnfindactor = (Button) findViewById(R.id.btnfindactor);
+        editTxtActorName = (AutoCompleteTextView) findViewById(R.id.editTxtActorName);
+
+
 
         //Results List
         listActorResults = (ListView) findViewById(R.id.listActorResults);
@@ -82,10 +86,6 @@ public class FindActorActivity extends Activity{
         //Assign adapter to ListView
         listActorResults.setAdapter(mAdapter);
 
-
-        //Search button
-        btnfindactor = (Button) findViewById(R.id.btnfindactor);
-        editTxtActorName = (AutoCompleteTextView) findViewById(R.id.editTxtActorName);
 
         //DropDown adapter
         autoCompleteAdapter = new ArrayAdapter<String>(
@@ -122,24 +122,18 @@ public class FindActorActivity extends Activity{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                newTime = System.currentTimeMillis() / 1000L;
                 typedText = editTxtActorName.getText().toString();
+
                 //execute background dropdown
-//                if(oldTime != 0 && (newTime - oldTime) >= 3) {
-//                    actors.clear();
-//                    excecuteDropdown();
-//                }
-
-//                oldTime = newTime;
-
-
+                actors.clear();
+                excecuteDropdown();
 
 
                 //If name in producers array is already typed, close the dropdown
                 if (actors.contains(editTxtActorName.getText().toString()))
-                   // editTxtActorName.dismissDropDown();
+                    // editTxtActorName.dismissDropDown();
 
-                listActorResults.setVisibility(View.INVISIBLE);      //Hide ListView
+                    listActorResults.setVisibility(View.INVISIBLE);      //Hide ListView
                 if (!editTxtActorName.getText().toString().isEmpty())
                     btnfindactor.setEnabled(true);     //Enable button if EditText isn't empty
                 else {
@@ -154,8 +148,6 @@ public class FindActorActivity extends Activity{
         });
 
 
-
-
     }
 
     public void excecuteQuery() {
@@ -163,7 +155,7 @@ public class FindActorActivity extends Activity{
     }
 
     public void excecuteDropdown() {
-       new DropdownDBConnect().execute("");
+        new DropdownDBConnect().execute("");
     }
 
     @Override
@@ -173,20 +165,6 @@ public class FindActorActivity extends Activity{
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
     private class ActorDBConnect extends AsyncTask<String, Void, Void> {

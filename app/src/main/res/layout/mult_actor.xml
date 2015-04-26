@@ -66,6 +66,14 @@
         android:layout_gravity="center_horizontal"
         android:clickable="true" />
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarMultActor"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <ListView
         android:layout_width="354dp"
         android:layout_height="wrap_content"
