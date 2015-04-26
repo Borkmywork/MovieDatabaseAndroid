@@ -3,19 +3,17 @@ package com.jack.moviedatabaseandroid;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Connection;
@@ -44,6 +42,7 @@ public class FindActorActivity extends Activity{
     String firstName;
     String lastName;
     String lastCommaFirst;
+    TextView findActorOverviewText;
     static Timer timer;
 
 
@@ -58,12 +57,16 @@ public class FindActorActivity extends Activity{
     long oldTime = 0;
     long newTime = 0;
 
+    String plot;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_actor);
+
+        findActorOverviewText = (TextView) findViewById(R.id.findActorOverviewText);
 
         bar = (ProgressBar) findViewById(R.id.progressBarActor);
         //Search button
@@ -85,6 +88,19 @@ public class FindActorActivity extends Activity{
 
         //Assign adapter to ListView
         listActorResults.setAdapter(mAdapter);
+
+        listActorResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                plot = "";
+                plot = RetrieveOverview.retrieveOverview(getApplicationContext(), movies.get(position));
+                if(plot.length() == 0)
+                    findActorOverviewText.setText("No overview found...");
+                else
+                    findActorOverviewText.setText(plot);
+                findActorOverviewText.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         //DropDown adapter

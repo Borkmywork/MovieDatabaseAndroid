@@ -1,104 +1,154 @@
 package com.jack.moviedatabaseandroid;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-/**
- * Created by cruze on 4/6/15.
- */
-public class MovieGame extends Activity {
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Timer;
+
+import org.apache.commons.collections4.bidimap.TreeBidiMap;
+
+
+
+public class MovieGame extends Activity{
+
+    String url = "jdbc:mysql://98.130.0.90:3306/pggarla_movies";
+    String user = "pggarla_preader";
+    String pass = "Csc4610mysql";
+    Connection conn;
+    ArrayList<String> movies = new ArrayList<>();
+    ArrayAdapter<String> mAdapter;
+    ListView listGameResults;
+    EditText editTextGame;
+    Button btnMovieGame;
+    String fullName;
+    String firstName;
+    String lastName;
+    String lastCommaFirst;
+    String fullName2;
+    String firstName2;
+    String lastName2;
+    static Timer timer;
+
+
+    ArrayList<String> actors = new ArrayList<>();
+    ArrayAdapter<String> autoCompleteAdapter;
+    ProgressBar bar;
+    String typedText;
+
+    int count;
+    EditText editTextGame2;
+    String secondActor;
+
+
+
+    //~~~~GAME VARIABLES~~~~~//
+    ArrayList<String> firstRoundMovies;
+    ArrayList<String> firstRoundActors;
+
+    ArrayList<String> secondRoundMovies;
+    ArrayList<String> secondRoundActors;
+
+    HashMap<String, ArrayList> gameTree;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.play_game);
 
-        //Results List
-        final ListView listGameResults = (ListView) findViewById(R.id.listGameResults);
+        bar = (ProgressBar) findViewById(R.id.progressBarDirector);
+        //Search button
+        btnMovieGame = (Button) findViewById(R.id.btnMovieGame);
 
-        //Example list of movies
-        String[] movies = new String[]{
-                "Movie 1",
-                "Movie 2",
-                "Movie 3",
-                "Movie 4",
-                "Movie 5",
-                "Movie 6",
-                "Movie 7",
-                "Movie 8",
-                "Movie 9",
-                "Movie 10"
-        };
+        editTextGame = (EditText) findViewById(R.id.editTextGame);
+        editTextGame2 = (EditText) findViewById(R.id.editTextGame2);
+
+
+
+        //Results List
+        listGameResults = (ListView) findViewById(R.id.listGameResults);
 
         // Define a new Adapter
         // First parameter - Context
         // Second parameter - Layout for the row
         // Third parameter - ID of the TextView to which the data is written
         // Forth - the Array of data
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
                 android.R.id.text1, movies);
 
         //Assign adapter to ListView
-        listGameResults.setAdapter(adapter);
+        listGameResults.setAdapter(mAdapter);
 
-        //ListView item click listener
-        listGameResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Get item value
-                String itemValue = (String) listGameResults.getItemAtPosition(position);
 
-                //Toast
-                Toast.makeText(getApplicationContext(), itemValue, Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        //Search button
-        final Button btnMovieGame = (Button) findViewById(R.id.btnMovieGame);
+        firstRoundMovies = new ArrayList<>();
+        secondRoundMovies = new ArrayList<>();
+        firstRoundActors = new ArrayList<>();
+        secondRoundActors = new ArrayList<>();
+
+        gameTree = new HashMap<>();
+
 
         btnMovieGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                count = 0;
+                //mAdapter.notifyDataSetChanged();
                 //When the search button is pressed
-                listGameResults.setVisibility(View.VISIBLE);    //Show ListView
-            }
-        });
+                fullName = editTextGame.getText().toString();
+                String[] splited = fullName.split(" ");
+                firstName = splited[0];
+                lastName = splited[splited.length - 1];
+                lastCommaFirst = "'" + lastName + ", " + firstName + "'";
 
-        //Text Changed Listener
-        final EditText editTextActor1 = (EditText) findViewById(R.id.editTextActor1);
-        //final EditText editTextActor2 = (EditText) findViewById(R.id.editTextActor2);
-        editTextActor1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!editTextActor1.getText().toString().isEmpty())
-                    btnMovieGame.setEnabled(true);     //Enable button if EditText isn't empty
-                else {
-                    btnMovieGame.setEnabled(false);    //Disable button if EditText is empty
-                    listGameResults.setVisibility(View.INVISIBLE);      //Hide ListView
-                }
-            }
+                fullName2 = editTextGame2.getText().toString();
+                String[] splited2 = fullName2.split(" ");
+                firstName2 = splited2[0];
+                lastName2 = splited2[splited2.length - 1];
+                secondActor = "'" + lastName2 + ", " + firstName2 + "'";
 
-            @Override
-            public void afterTextChanged(Editable s) {
+
+
+                bar.setVisibility(View.VISIBLE);
+                getMoviesByActor();
 
             }
         });
+
+
+
+
+
+    }
+
+    private void getMoviesByActor() {
+        new MoviesDBConnect().execute("");
+    }
+
+    private void getActorsByMovie() {
+
     }
 
 
@@ -109,18 +159,118 @@ public class MovieGame extends Activity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+
+    //~~~~GET MOVIES BY ACTOR~~~~~~//
+
+    private class MoviesDBConnect extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String entry = "";
+            try {
+
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                conn = DriverManager.getConnection(url, user, pass);
+
+            } catch (java.sql.SQLException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+            try {
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT distinct title.title FROM cast_info\n" +
+                        "INNER JOIN name ON name.id=person_id\n" +
+                        "INNER JOIN title on title.id=cast_info.movie_id\n" +
+                        "WHERE title.kind_id = 1 AND name.name LIKE " + lastCommaFirst + " AND cast_info.role_id = 1\n" +
+                        "ORDER BY title.title");
+                while (rs.next()) {
+                    if(count == 0)
+                        firstRoundMovies.add(rs.getString(1));
+                    else if (count == 1)
+                        secondRoundMovies.add(rs.getString(1));
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+
+
+
+            count++;
+        }
     }
+
+
+
+
+
+
+
+    //~~~~GET ACTORS FROM MOVIE~~~~~~//
+
+    private class ActorsDBConnect extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String entry = "";
+            try {
+
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                conn = DriverManager.getConnection(url, user, pass);
+
+            } catch (java.sql.SQLException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+            try {
+
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT distinct title.title FROM cast_info\n" +
+                        "INNER JOIN name ON name.id=person_id\n" +
+                        "INNER JOIN title on title.id=cast_info.movie_id\n" +
+                        "WHERE title.kind_id = 1 AND name.name LIKE " + lastCommaFirst + " AND cast_info.role_id = 1\n" +
+                        "ORDER BY title.title");
+                while (rs.next()) {
+//                    if(count == 0)
+//                        firstRoundMovies.add(rs.getString(1));
+//                    else if (count == 1)
+//                        secondRoundMovies.add(rs.getString(1));
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+        }
+    }
+
+
+
+
+
+
+
+
 }
