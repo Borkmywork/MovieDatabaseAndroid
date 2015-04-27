@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
                     break;
                 case R.id.find_movie:
                     //do stuff
+                    startActivity(new Intent(v.getContext(), FindMovieActivity.class));
                     break;
                 case R.id.play_game:
                     startActivity(new Intent(v.getContext(), MovieGame.class));
