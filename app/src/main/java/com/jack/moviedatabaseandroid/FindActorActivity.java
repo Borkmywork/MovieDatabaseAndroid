@@ -92,13 +92,12 @@ public class FindActorActivity extends Activity{
         listActorResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                plot = "";
-                plot = RetrieveOverview.retrieveOverview(getApplicationContext(), movies.get(position));
-                if(plot.length() == 0)
+                findActorOverviewText.setVisibility(View.VISIBLE);
+                plot = RetrieveOverview.retrieveOverview(view.getContext(), movies.get(position));
+                if(plot == null)
                     findActorOverviewText.setText("No overview found...");
                 else
                     findActorOverviewText.setText(plot);
-                findActorOverviewText.setVisibility(View.VISIBLE);
             }
         });
 
